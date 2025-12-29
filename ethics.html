@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ethics Challenge</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.5; background: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 8px; border: 1px solid #ccc; max-width: 600px; margin: auto; }
+        .btn { display: block; width: 100%; padding: 10px; margin: 10px 0; cursor: pointer; text-align: left; background: #fff; border: 1px solid #007bff; border-radius: 4px; }
+        .btn:hover { background: #e7f3ff; }
+        #feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 4px; font-weight: bold; }
+        #next { display: none; margin-top: 15px; padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; float: right; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2 id="title">Scenario 1 of 5</h2>
+    <p id="scenario"></p>
+    <div id="options"></div>
+    <div id="feedback"></div>
+    <button id="next" onclick="nextQuestion()">Next Scenario ➡️</button>
+    <div style="clear:both;"></div>
+</div>
+
+<script>
+    const data = [
+        { s: "You used AI to draft student feedback. The AI gave a 'B-' and listed critiques.", q: "Which action is ethical?", 
+          a: [{t: "Paste it directly into Canvas.", c: false, f: "Incorrect. You must verify the 'Black Box' output."}, 
+              {t: "Review, verify, and adjust based on your judgment.", c: true, f: "Correct! You are the 'Human in the Loop.'"}]},
+        { s: "AI generated a case study for 'State v. Okmulgee Systems (2023)'.", q: "What do you do?", 
+          a: [{t: "Add it to your slides immediately.", c: false, f: "Incorrect. AI often hallucinates fake citations."}, 
+              {t: "Verify the case in a legal database first.", c: true, f: "Correct! Fact-checking is essential."}]},
+        { s: "You want students to use AI for brainstorming transparently.", q: "Which policy is best?", 
+          a: [{t: "Allow secret use.", c: false, f: "Incorrect. This hides the process."}, 
+              {t: "Require a disclosure statement.", c: true, f: "Correct! Disclosure ensures transparency."}]},
+        { s: "You paste a student's transcript into public AI for a letter.", q: "Is this okay?", 
+          a: [{t: "Yes, it's efficient.", c: false, f: "Incorrect. This violates FERPA/Privacy rules."}, 
+              {t: "No, this is a data breach of PII.", c: true, f: "Correct! Protect student data."}]},
+        { s: "AI image generator only shows men for 'IT Manager'.", q: "How do you handle bias?", 
+          a: [{t: "Use the images as-is.", c: false, f: "Incorrect. This reinforces stereotypes."}, 
+              {t: "Adjust prompt for diversity.", c: true, f: "Correct! Counteract Black Box bias."}]}
+    ];
+
+    let current = 0;
+
+    function load() {
+        const item = data[current];
+        document.getElementById('title').innerText = "Scenario " + (current + 1) + " of 5";
+        document.getElementById('scenario').innerText = item.s + " " + item.q;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next').style.display = 'none';
+        const container = document.getElementById('options');
+        container.innerHTML = '';
+        
+        item.a.forEach(opt => {
+            const b = document.createElement('button');
+            b.className = 'btn';
+            b.innerText = opt.t;
+            b.onclick = () => {
+                const f = document.getElementById('feedback');
+                f.innerText = (opt.c ? "✅ " : "❌ ") + opt.f;
+                f.style.display = 'block';
+                f.style.background = opt.c ? "#d4edda" : "#f8d7da";
+                if(opt.c) document.getElementById('next').style.display = 'block';
+            };
+            container.appendChild(b);
+        });
+    }
+
+    function nextQuestion() {
+        current++;
+        if(current < data.length) { load(); } 
+        else { document.querySelector('.box').innerHTML = "<h2>🎉 Activity Complete!</h2><p>You've completed the Ethics Challenge.</p>"; }
+    }
+
+    load();
+</script>
+</body>
+</html>
